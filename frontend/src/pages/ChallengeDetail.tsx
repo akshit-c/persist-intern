@@ -103,7 +103,7 @@ const ChallengeDetail: React.FC = () => {
         // Fetch submissions
         const submissionsResponse = await challengeService.getSubmissions();
         const challengeSubmissions = submissionsResponse.results?.filter(
-          (s) => s.challenge.id === parseInt(id)
+          (s: Submission) => s.challenge.id === parseInt(id)
         ) || [];
         setSubmissions(challengeSubmissions);
         
@@ -135,7 +135,7 @@ const ChallengeDetail: React.FC = () => {
     fetchData();
   }, [id]);
   
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
   
@@ -156,7 +156,7 @@ const ChallengeDetail: React.FC = () => {
       // Refresh submissions
       const submissionsResponse = await challengeService.getSubmissions();
       const challengeSubmissions = submissionsResponse.results?.filter(
-        (s) => s.challenge.id === parseInt(id)
+        (s: Submission) => s.challenge.id === parseInt(id)
       ) || [];
       setSubmissions(challengeSubmissions);
       
@@ -400,7 +400,13 @@ const ChallengeDetail: React.FC = () => {
               <Box sx={{ typography: 'body1' }}>
                 <ReactMarkdown
                   components={{
-                    code({node, inline, className, children, ...props}) {
+                    code({node, inline, className, children, ...props}: {
+                      node: any;
+                      inline?: boolean;
+                      className?: string;
+                      children: React.ReactNode;
+                      [key: string]: any;
+                    }) {
                       const match = /language-(\w+)/.exec(className || '');
                       return !inline && match ? (
                         <SyntaxHighlighter

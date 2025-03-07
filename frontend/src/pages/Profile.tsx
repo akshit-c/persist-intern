@@ -72,7 +72,7 @@ function a11yProps(index: number) {
 }
 
 const Profile: React.FC = () => {
-  const { user, updateProfile } = useAuth();
+  const { user /* updateProfile */ } = useAuth();
   const theme = useTheme();
   
   const [loading, setLoading] = useState(false);
@@ -119,7 +119,7 @@ const Profile: React.FC = () => {
     fetchData();
   }, []);
   
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
   

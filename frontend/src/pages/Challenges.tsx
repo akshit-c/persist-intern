@@ -26,6 +26,7 @@ import {
     MenuItem,
     Pagination,
     Select,
+    SelectChangeEvent,
     TextField,
     Tooltip,
     Typography,
@@ -53,7 +54,7 @@ const Challenges: React.FC = () => {
   
   // Pagination
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, _setTotalPages] = useState(1);
   const itemsPerPage = 6;
   
   // Bookmarks
@@ -101,22 +102,22 @@ const Challenges: React.FC = () => {
     setPage(1); // Reset to first page on search
   };
   
-  const handleDifficultyChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setDifficultyFilter(event.target.value as string);
+  const handleDifficultyChange = (event: SelectChangeEvent) => {
+    setDifficultyFilter(event.target.value);
     setPage(1);
   };
   
-  const handleCategoryChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCategoryFilter(event.target.value as string);
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    setCategoryFilter(event.target.value);
     setPage(1);
   };
   
-  const handleStatusChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setStatusFilter(event.target.value as string);
+  const handleStatusChange = (event: SelectChangeEvent) => {
+    setStatusFilter(event.target.value);
     setPage(1);
   };
   
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

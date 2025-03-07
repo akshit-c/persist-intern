@@ -24,8 +24,7 @@ import {
     Stepper,
     TextField,
     Typography,
-    useMediaQuery,
-    useTheme,
+    useTheme
 } from '@mui/material';
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -35,7 +34,7 @@ const Register: React.FC = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
