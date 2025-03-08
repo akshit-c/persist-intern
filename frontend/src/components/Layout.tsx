@@ -27,9 +27,7 @@ import {
     MenuItem,
     Toolbar,
     Tooltip,
-    Typography,
-    useMediaQuery,
-    useTheme,
+    Typography
 } from '@mui/material';
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -39,8 +37,8 @@ const Layout: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [anchorElNotifications, setAnchorElNotifications] = useState<null | HTMLElement>(null);

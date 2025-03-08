@@ -23,8 +23,7 @@ import {
     StepLabel,
     Stepper,
     TextField,
-    Typography,
-    useTheme
+    Typography
 } from '@mui/material';
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -33,7 +32,7 @@ import { useAuth } from '../contexts/AuthContext';
 const Register: React.FC = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const theme = useTheme();
+  // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const [activeStep, setActiveStep] = useState(0);

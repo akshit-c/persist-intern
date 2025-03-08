@@ -54,7 +54,6 @@ const Challenges: React.FC = () => {
   
   // Pagination
   const [page, setPage] = useState(1);
-  const [totalPages, _setTotalPages] = useState(1);
   const itemsPerPage = 6;
   
   // Bookmarks
@@ -68,9 +67,6 @@ const Challenges: React.FC = () => {
         // Fetch challenges
         const challengesResponse = await challengeService.getAllChallenges();
         setChallenges(challengesResponse.results || []);
-        
-        // Calculate total pages
-        setTotalPages(Math.ceil((challengesResponse.results?.length || 0) / itemsPerPage));
         
         // Fetch user progress
         const progressResponse = await progressService.getUserProgress();
