@@ -200,7 +200,7 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
-    "https://persist-intern.vercel.app",
+    "https://frontend-qi5nip8ag-akshitchaudhary01-gmailcoms-projects.vercel.app",
     "http://localhost:5173",
 ]
 
