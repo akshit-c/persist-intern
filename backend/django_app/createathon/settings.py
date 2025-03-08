@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Load environment variables
 load_dotenv()
@@ -29,9 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-&9iel18&)f@u79li#&qn+n+4p(m47*wo=pxm#ha@v!r0c+^%+!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['*', '.onrender.com']
 
 
 # Application definition
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
+    "whitenoise.runserver_nostatic",  # Add whitenoise
     "drf_yasg",
     "django_filters",
     
@@ -59,8 +61,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add whitenoise middleware
     "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -92,25 +95,33 @@ WSGI_APPLICATION = "createathon.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('DB_NAME', 'createathon'),
-        "USER": os.getenv('DB_USER', 'postgres'),
-        "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
-        "HOST": os.getenv('DB_HOST', 'localhost'),
-        "PORT": os.getenv('DB_PORT', '5432'),
+# Use DATABASE_URL environment variable for Render
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
-}
-
-# Use SQLite as a fallback for development
-if os.getenv('USE_SQLITE', 'False') == 'True':
+else:
+    # Default database configuration
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv('DB_NAME', 'createathon'),
+            "USER": os.getenv('DB_USER', 'postgres'),
+            "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
+            "HOST": os.getenv('DB_HOST', 'localhost'),
+            "PORT": os.getenv('DB_PORT', '5432'),
         }
     }
+
+    # Use SQLite as a fallback for development
+    if os.getenv('USE_SQLITE', 'False') == 'True':
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db.sqlite3",
+            }
+        }
 
 
 # Password validation
@@ -149,6 +160,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -187,7 +199,16 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://persist-intern.vercel.app",
+    "http://localhost:5173",
+]
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -208,3 +229,9 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# Configure for HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

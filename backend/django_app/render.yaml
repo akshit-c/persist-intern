@@ -1,0 +1,26 @@
+services:
+  # Django web service
+  - type: web
+    name: persist-intern-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn createathon.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.18
+      - key: DATABASE_URL
+        fromDatabase:
+          name: persist-intern-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+
+# PostgreSQL database
+databases:
+  - name: persist-intern-db
+    databaseName: persist_intern
+    user: persist_intern_user 
