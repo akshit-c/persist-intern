@@ -204,11 +204,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_ALL_ORIGINS = False
-
+# Temporarily enable all origins for testing
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',

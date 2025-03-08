@@ -73,8 +73,16 @@ export const authService = {
   },
   
   register: async (userData: any) => {
-    const response = await api.post('/users/register/', userData);
-    return response.data;
+    console.log('API Service: Registering user with data:', userData);
+    console.log('API URL:', API_URL);
+    try {
+      const response = await api.post('/users/register/', userData);
+      console.log('API Service: Registration successful, response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('API Service: Registration failed:', error);
+      throw error;
+    }
   },
   
   getProfile: async () => {

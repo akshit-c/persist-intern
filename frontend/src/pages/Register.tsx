@@ -91,16 +91,34 @@ const Register: React.FC = () => {
     try {
       setError('');
       setLoading(true);
+      console.log('Registering with data:', formData);
       await register(formData);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(
-        err.response?.data?.username?.[0] ||
-        err.response?.data?.email?.[0] ||
-        err.response?.data?.password?.[0] ||
-        err.response?.data?.non_field_errors?.[0] ||
-        'Failed to register'
-      );
+      console.error('Registration error:', err);
+      
+      // Handle different types of error responses
+      if (err.response?.data) {
+        // Handle Django REST framework validation errors
+        const errors = err.response.data;
+        const errorMessages = [];
+        
+        // Extract error messages from different fields
+        for (const field in errors) {
+          if (Array.isArray(errors[field])) {
+            errorMessages.push(`${field}: ${errors[field].join(', ')}`);
+          } else if (typeof errors[field] === 'string') {
+            errorMessages.push(`${field}: ${errors[field]}`);
+          }
+        }
+        
+        setError(errorMessages.join('\n') || 'Failed to register');
+      } else if (err.message) {
+        // Handle network or other errors
+        setError(`Error: ${err.message}`);
+      } else {
+        setError('Failed to register. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }

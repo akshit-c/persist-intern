@@ -86,7 +86,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (userData: any) => {
     setIsLoading(true);
     try {
+      console.log('Sending registration request with data:', userData);
       const response = await authService.register(userData);
+      console.log('Registration response:', response);
       
       // Save tokens to localStorage
       localStorage.setItem('access_token', response.access);
@@ -95,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Set user data
       setUser(response.user);
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error in AuthContext:', error);
       throw error;
     } finally {
       setIsLoading(false);
